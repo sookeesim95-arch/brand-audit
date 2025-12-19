@@ -1,0 +1,362 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>品牌商业潜力深度诊断分析报告</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root { 
+            --primary: #0f172a; 
+            --accent: #3b82f6;  
+            --target: #10b981; 
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+        }
+        body { font-family: "PingFang SC", "Microsoft YaHei", sans-serif; background: var(--bg); color: #1e293b; margin: 0; padding: 20px; line-height: 1.5; }
+        
+        /* 封面样式 */
+        .cover-page { background: var(--primary); color: white; padding: 60px 40px; border-radius: 20px; margin-bottom: 30px; }
+        .cover-page h1 { font-size: 2.2rem; margin: 15px 0; border-bottom: 2px solid var(--accent); padding-bottom: 10px; }
+        .cover-info { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; max-width: 700px; }
+        .cover-info div { display: flex; flex-direction: column; }
+        .cover-info label { font-size: 0.75rem; color: #94a3b8; margin-bottom: 4px; }
+        .cover-info input { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 8px; border-radius: 6px; font-size: 0.9rem; outline: none; }
+
+        .wrapper { max-width: 1250px; margin: 0 auto; display: grid; grid-template-columns: 1.3fr 1fr; gap: 25px; }
+        .card { background: var(--card-bg); padding: 25px; border-radius: 15px; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border-top: 5px solid var(--primary); }
+        h2 { color: var(--primary); font-size: 1.2rem; margin-bottom: 20px; border-bottom: 1px solid #f1f5f9; padding-bottom: 10px; }
+        .q-item { margin-bottom: 30px; }
+        .q-title { font-weight: 600; margin-bottom: 12px; display: block; color: #0f172a; font-size: 1rem; border-left: 4px solid var(--accent); padding-left: 10px; }
+        .options { display: flex; flex-direction: column; gap: 6px; }
+        label.opt-label { cursor: pointer; font-size: 0.9rem; color: #475569; padding: 10px; border-radius: 8px; border: 1px solid #e2e8f0; transition: 0.2s; }
+        label.opt-label:hover { background: #f1f7ff; border-color: var(--accent); }
+        
+        .report-area { position: sticky; top: 20px; background: var(--card-bg); padding: 30px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.08); text-align: center; }
+        #total-score { font-size: 4rem; color: var(--primary); font-weight: 800; line-height: 1; margin: 10px 0; }
+        
+        .footer-contact { margin-top: 30px; padding: 25px; background: #f1f5f9; border-radius: 12px; text-align: left; border-top: 4px solid var(--primary); }
+        .dim-text { font-size: 0.85rem; color: #475569; background: #fff; padding: 10px; border-radius: 6px; margin-bottom: 10px; border-left: 3px solid #cbd5e1; }
+
+        .btn-generate { width: 100%; background: var(--accent); color: white; border: none; padding: 18px; border-radius: 10px; font-size: 1.1rem; font-weight: bold; cursor: pointer; margin-bottom: 15px; }
+
+        /* 打印优化 */
+        @media print { 
+            @page { margin: 1.5cm; }
+            body { padding: 0; background: white; }
+            .form-area, .btn-generate { display: none !important; } 
+            .wrapper { display: block; }
+            .report-area { width: 100% !important; position: static !important; box-shadow: none !important; border: none !important; padding: 0; }
+            .cover-page { page-break-after: always; padding: 80px 40px; border-radius: 0; margin: 0; }
+            .footer-contact { page-break-before: auto; margin-top: 50px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="cover-page">
+    <p style="color:var(--accent); font-weight:bold; letter-spacing: 2px; margin-bottom: 10px;">MARKETING STRATEGY ASSESSMENT</p>
+    <h1>品牌商业潜力深度诊断分析报告</h1>
+    <div class="cover-info">
+        <div><label>受测公司名称</label><input type="text" placeholder="填写公司名"></div>
+        <div><label>诊断日期</label><input type="date"></div>
+        <div><label>负责人姓名</label><input type="text" placeholder="负责人"></div>
+        <div><label>联系号码</label><input type="text" placeholder="联系号码"></div>
+    </div>
+</div>
+
+<div class="wrapper">
+    <form class="form-area" id="diagForm">
+        
+        <div class="card">
+            <h2>维度 1：品牌定位 Brand Positioning</h2>
+            <div class="q-item">
+                <span class="q-title">1–1 你是否清楚你的“最赚钱客户”是谁？以及 TA 想透过产品／服务解决什么问题？</span>
+                <div class="options">
+                    <label class="opt-label"><input type="radio" name="d1q1" value="1" checked> A 完全不清楚</label>
+                    <label class="opt-label"><input type="radio" name="d1q1" value="2"> B 有大概方向</label>
+                    <label class="opt-label"><input type="radio" name="d1q1" value="3"> C 有基本画像，但不够清晰</label>
+                    <label class="opt-label"><input type="radio" name="d1q1" value="4"> D 有明确画像</label>
+                    <label class="opt-label"><input type="radio" name="d1q1" value="5"> E 有完整 persona（问题、动机、预算、购买路径）</label>
+                </div>
+            </div>
+            <div class="q-item">
+                <span class="q-title">1–2 你的品牌定位是否能清楚表达“为市场解决什么问题”？</span>
+                <div class="options">
+                    <label class="opt-label"><input type="radio" name="d1q2" value="1" checked> A 没有定位</label>
+                    <label class="opt-label"><input type="radio" name="d1q2" value="2"> B 有一句 slogan，但不清晰</label>
+                    <label class="opt-label"><input type="radio" name="d1q2" value="3"> C 有简单定位</label>
+                    <label class="opt-label"><input type="radio" name="d1q2" value="4"> D 有清晰定位</label>
+                    <label class="opt-label"><input type="radio" name="d1q2" value="5"> E 有验证过的定位（经 TA 测试有效）</label>
+                </div>
+            </div>
+            <div class="q-item">
+                <span class="q-title">1–3 你是否清楚品牌在行业里的独特价值？</span>
+                <div class="options">
+                    <label class="opt-label"><input type="radio" name="d1q3" value="1" checked> A 完全没有</label>
+                    <label class="opt-label"><input type="radio" name="d1q3" value="2"> B 有想法但模糊</label>
+                    <label class="opt-label"><input type="radio" name="d1q3" value="3"> C 有基本价值</label>
+                    <label class="opt-label"><input type="radio" name="d1q3" value="4"> D 能表达价值</label>
+                    <label class="opt-label"><input type="radio" name="d1q3" value="5"> E 独特价值可转成可见优势（被顾客记得）</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>维度 2：市场差异化 Market Differentiation</h2>
+            <div class="q-item">
+                <span class="q-title">2–1 你的品牌是否知道和竞争对手的核心差别？</span>
+                <div class="options">
+                    <label class="opt-label"><input type="radio" name="d2q1" value="1" checked> A 不知道</label>
+                    <label class="opt-label"><input type="radio" name="d2q1" value="2"> B 简单知道</label>
+                    <label class="opt-label"><input type="radio" name="d2q1" value="3"> C 大概知道两三点</label>
+                    <label class="opt-label"><input type="radio" name="d2q1" value="4"> D 能具体列出差异</label>
+                    <label class="opt-label"><input type="radio" name="d2q1" value="5"> E 有明显差异（顾客会主动提起）</label>
+                </div>
+            </div>
+            <div class="q-item">
+                <span class="q-title">2–2 你的品牌服务／产品是否有“别人没有，但你有”的东西？</span>
+                <div class="options">
+                    <label class="opt-label"><input type="radio" name="d2q2" value="1" checked> A 完全没有</label>
+                    <label class="opt-label"><input type="radio" name="d2q2" value="2"> B 有一点不明显</label>
+                    <label class="opt-label"><input type="radio" name="d2q2" value="3"> C 有特色但不够突出</label>
+                    <label class="opt-label"><input type="radio" name="d2q2" value="4"> D 有可展示的差异</label>
+                    <label class="opt-label"><input type="radio" name="d2q2" value="5"> E 差异非常明显（独家、独创、流程特别）</label>
+                </div>
+            </div>
+            <div class="q-item">
+                <span class="q-title">2–3 你的品牌价格、体验、价值是否能让顾客觉得“值得”？</span>
+                <div class="options">
+                    <label class="opt-label"><input type="radio" name="d2q3" value="1" checked> A 顾客常说贵</label>
+                    <label class="opt-label"><input type="radio" name="d2q3" value="2"> B 顾客犹豫多</label>
+                    <label class="opt-label"><input type="radio" name="d2q3" value="3"> C 偶尔被接受</label>
+                    <label class="opt-label"><input type="radio" name="d2q3" value="4"> D 大多数人觉得合理</label>
+                    <label class="opt-label"><input type="radio" name="d2q3" value="5"> E 顾客主动说 CP 值高</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>维度 3：产品／服务体验 Product Experience</h2>
+            <div class="q-item">
+                <span class="q-title">3–1 你是否有独特的服务或产品体验？（下单—服务—售后）且是同行无法提供的？</span>
+                <div class="options">
+                    <label class="opt-label"><input type="radio" name="d3q1" value="1" checked> A 完全没有</label>
+                    <label class="opt-label"><input type="radio" name="d3q1" value="2"> B 有一些流程</label>
+                    <label class="opt-label"><input type="radio" name="d3q1" value="3"> C 有简单体验</label>
+                    <label class="opt-label"><input type="radio" name="d3q1" value="4"> D 有完整流程</label>
+                    <label class="opt-label"><input type="radio" name="d3q1" value="5"> E 有独特体验且品牌化</label>
+                </div>
+            </div>
+            <div class="q-item">
+                <span class="q-title">3–2 是否有稳定的好评与 feedback？是否主动关心顾客？</span>
+                <div class="options">
+                    <label class="opt-label"><input type="radio" name="d3q2" value="1" checked> A 没有 feedback</label>
+                    <label class="opt-label"><input type="radio" name="d3q2" value="2"> B 偶尔有人回应</label>
+                    <label class="opt-label"><input type="radio" name="d3q2" value="3"> C 有一些</label>
+                    <label class="opt-label"><input type="radio" name="d3q2" value="4"> D 有稳定好的评论</label>
+                    <label class="opt-label"><input type="radio" name="d3q2" value="5"> E 有大量好评、顾客主动分享</label>
+                </div>
+            </div>
+            <div class="q-item">
+                <span class="q-title">3–3 产品／服务是否比市场上更独特？</span>
+                <div class="options">
+                    <label class="opt-label"><input type="radio" name="d3q3" value="1" checked> A 完全没有</label>
+                    <label class="opt-label"><input type="radio" name="d3q3" value="2"> B 稍微不同</label>
+                    <label class="opt-label"><input type="radio" name="d3q3" value="3"> C 普通</label>
+                    <label class="opt-label"><input type="radio" name="d3q3" value="4"> 有明显特色</label>
+                    <label class="opt-label"><input type="radio" name="d3q3" value="5"> E 独特且无法被复制</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>维度 4：营销策略 Marketing Strategy</h2>
+            <div class="q-item">
+                <span class="q-title">4–1 你是否有固定的营销方向或 campaign？（不依赖临时想法）</span>
+                <div class="options">
+                    <label class="opt-label"><input type="radio" name="d4q1" value="1" checked> A 完全没有</label>
+                    <label class="opt-label"><input type="radio" name="d4q1" value="2"> B 偶尔想到什么就做什么</label>
+                    <label class="opt-label"><input type="radio" name="d4q1" value="3"> C 有基本方向</label>
+                    <label class="opt-label"><input type="radio" name="d4q1" value="4"> D 有清楚策略</label>
+                    <label class="opt-label"><input type="radio" name="d4q1" value="5"> E 有季度／年度 campaign 与规划</label>
+                </div>
+            </div>
+            <div class="q-item">
+                <span class="q-title">4–2 内容是否有带来“转换率”（询问、成交、留资）？</span>
+                <div class="options">
+                    <label class="opt-label"><input type="radio" name="d4q2" value="1" checked> A 完全没有</label>
+                    <label class="opt-label"><input type="radio" name="d4q2" value="2"> B 偶尔有</label>
+                    <label class="opt-label"><input type="radio" name="d4q2" value="3"> C 转换率一般</label>
+                    <label class="opt-label"><input type="radio" name="d4q2" value="4"> D 有稳定转换</label>
+                    <label class="opt-label"><input type="radio" name="d4q2" value="5"> E 转换率明显 & 可追踪</label>
+                </div>
+            </div>
+            <div class="q-item">
+                <span class="q-title">4–3 你是否有明确 KPI？</span>
+                <div class="options">
+                    <label class="opt-label"><input type="radio" name="d4q3" value="1" checked> A 没有</label>
+                    <label class="opt-label"><input type="radio" name="d4q3" value="2"> B 偶尔设</label>
+                    <label class="opt-label"><input type="radio" name="d4q3" value="3"> C 有但不清楚</label>
+                    <label class="opt-label"><input type="radio" name="d4q3" value="4"> D 有固定 KPI</label>
+                    <label class="opt-label"><input type="radio" name="d4q3" value="5"> E 有 KPI + 月度追踪 + 调整优化</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>维度 5：社交媒体执行 Social Media Execution</h2>
+            <div class="q-item">
+                <span class="q-title">5–1 是否有稳定更新（至少每周 2–3 次）？</span>
+                <div class="options">
+                    <label class="opt-label"><input type="radio" name="d5q1" value="1" checked> A 完全没有</label>
+                    <label class="opt-label"><input type="radio" name="d5q1" value="2"> B 不定期</label>
+                    <label class="opt-label"><input type="radio" name="d5q1" value="3"> C 有一些</label>
+                    <label class="opt-label"><input type="radio" name="d5q1" value="4"> D 有规律</label>
+                    <label class="opt-label"><input type="radio" name="d5q1" value="5"> E 非常稳定 & 内容策略化</label>
+                </div>
+            </div>
+            <div class="q-item">
+                <span class="q-title">5–2 你的视觉呈现是否统一（字体、颜色、风格）？</span>
+                <div class="options">
+                    <label class="opt-label"><input type="radio" name="d5q2" value="1" checked> A 不统一 & 信息乱</label>
+                    <label class="opt-label"><input type="radio" name="d5q2" value="2"> B 有一点统一</label>
+                    <label class="opt-label"><input type="radio" name="d5q2" value="3"> C 看起来差不多</label>
+                    <label class="opt-label"><input type="radio" name="d5q2" value="4"> D 视觉一致 & 说明清楚</label>
+                    <label class="opt-label"><input type="radio" name="d5q2" value="5"> E 非常专业（视觉统一 + 信息清晰 + 价值明确）</label>
+                </div>
+            </div>
+            <div class="q-item">
+                <span class="q-title">5–3 你的内容是否让 TA 感觉“可信、专业、想尝试”？</span>
+                <div class="options">
+                    <label class="opt-label"><input type="radio" name="d5q3" value="1" checked> A 完全没有</label>
+                    <label class="opt-label"><input type="radio" name="d5q3" value="2"> B 很少</label>
+                    <label class="opt-label"><input type="radio" name="d5q3" value="3"> C 普通</label>
+                    <label class="opt-label"><input type="radio" name="d5q3" value="4"> D 有明显效果</label>
+                    <label class="opt-label"><input type="radio" name="d5q3" value="5"> E 强信任感（顾客主动咨询）</label>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>维度 6：社交媒体成交率 Conversion & Closing</h2>
+            <div class="q-item">
+                <span class="q-title">6–1 是否能让顾客在看内容后产生行动？</span>
+                <div class="options">
+                    <label class="opt-label"><input type="radio" name="d6q1" value="1" checked> A 完全没有</label>
+                    <label class="opt-label"><input type="radio" name="d6q1" value="2"> B 偶尔</label>
+                    <label class="opt-label"><input type="radio" name="d6q1" value="3"> C 普通</label>
+                    <label class="opt-label"><input type="radio" name="d6q1" value="4"> D 有持续行动</label>
+                    <label class="opt-label"><input type="radio" name="d6q1" value="5"> E 很多顾客主动来找你</label>
+                </div>
+            </div>
+            <div class="q-item">
+                <span class="q-title">6–2 是否有系统化的咨询流程？</span>
+                <div class="options">
+                    <label class="opt-label"><input type="radio" name="d6q2" value="1" checked> A 完全没有</label>
+                    <label class="opt-label"><input type="radio" name="d6q2" value="2"> B 随便回</label>
+                    <label class="opt-label"><input type="radio" name="d6q2" value="3"> C 有基本回应</label>
+                    <label class="opt-label"><input type="radio" name="d6q2" value="4"> D 有 SOP</label>
+                    <label class="opt-label"><input type="radio" name="d6q2" value="5"> E 有 SOP + 优化 + 快速成交</label>
+                </div>
+            </div>
+            <div class="q-item">
+                <span class="q-title">6–3 是否能清楚告诉 customer：为什么要选你？</span>
+                <div class="options">
+                    <label class="opt-label"><input type="radio" name="d6q3" value="1" checked> A 说不出来</label>
+                    <label class="opt-label"><input type="radio" name="d6q3" value="2"> B 依赖价格吸引</label>
+                    <label class="opt-label"><input type="radio" name="d6q3" value="3"> C 有基本优势</label>
+                    <label class="opt-label"><input type="radio" name="d6q3" value="4"> D 有清楚理由</label>
+                    <label class="opt-label"><input type="radio" name="d6q3" value="5"> E 理由清楚、有故事、有价值、有差异（最强）</label>
+                </div>
+            </div>
+        </div>
+
+        <button type="button" class="btn-generate" onclick="updateReport()">点击生成深度分析报告</button>
+    </form>
+
+    <div class="report-area">
+        <h3 style="color:var(--primary); margin-top:0;">品牌诊断图谱：现状 vs 目标</h3>
+        <div style="height:350px;">
+            <canvas id="radarChart"></canvas>
+        </div>
+        
+        <div style="margin: 20px 0;">
+            <p style="color:#64748b; font-size: 0.9rem;">综合商业潜力评分</p>
+            <div id="total-score">0</div>
+        </div>
+
+        <div id="dim-results" style="text-align:left;"></div>
+
+        <div class="footer-contact">
+            <h4 style="margin-top:0; color:var(--primary); border-bottom: 1px solid #cbd5e1; padding-bottom: 8px;">专家咨询与后续建议</h4>
+            <p style="font-size:0.8rem; color:#475569;">根据本次测评，您的品牌在特定维度有明显的增长潜力。如需详尽策略方案，请联系您的顾问：</p>
+            <div style="margin-top:15px; font-size: 0.9rem;">
+                <p><strong>品牌顾问：</strong> 专家名</p>
+                <p><strong>联系号码：</strong> 0139903165</p>
+            </div>
+        </div>
+
+        <button class="btn-generate" style="background:var(--primary); margin-top:15px;" onclick="window.print()">导出专业 PDF 报告</button>
+    </div>
+</div>
+
+<script>
+    let myChart;
+    const dimNames = ['品牌定位', '市场差异化', '产品体验', '营销策略', '社媒执行', '成交率'];
+    
+    window.onload = function() {
+        const ctx = document.getElementById('radarChart').getContext('2d');
+        myChart = new Chart(ctx, {
+            type: 'radar',
+            data: {
+                labels: dimNames,
+                datasets: [
+                    {
+                        label: '当前现状',
+                        data: [0,0,0,0,0,0],
+                        backgroundColor: 'rgba(59, 130, 246, 0.2)',
+                        borderColor: '#3b82f6',
+                        borderWidth: 3,
+                        pointBackgroundColor: '#0f172a'
+                    },
+                    {
+                        label: '优化目标',
+                        data: [14, 14, 14, 13, 14, 15], 
+                        backgroundColor: 'rgba(16, 185, 129, 0.05)',
+                        borderColor: '#10b981',
+                        borderDash: [5, 5],
+                        borderWidth: 2,
+                        pointRadius: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: { r: { min: 0, max: 15, ticks: { display: false } } }
+            }
+        });
+    };
+
+    function updateReport() {
+        const form = document.getElementById('diagForm');
+        const data = new FormData(form);
+        const getScore = (p) => (parseInt(data.get(p+'q1')||0))+(parseInt(data.get(p+'q2')||0))+(parseInt(data.get(p+'q3')||0));
+        
+        const scores = [getScore('d1'), getScore('d2'), getScore('d3'), getScore('d4'), getScore('d5'), getScore('d6')];
+        myChart.data.datasets[0].data = scores;
+        myChart.update();
+
+        document.getElementById('total-score').innerText = scores.reduce((a, b) => a + b, 0);
+
+        let html = '<h4 style="margin-bottom:10px; border-bottom:1px solid #eee;">维度诊断：</h4>';
+        const advice = ["需重塑底层定位", "需强化差异化竞争", "需优化客户体验", "需建立内容策略体系", "需规范视觉与执行频率", "需建立成交SOP"];
+        scores.forEach((s, i) => {
+            if(s <= 7) html += `<div class="dim-text">⚠️ <b>${dimNames[i]}</b>：${advice[i]}</div>`;
+        });
+        document.getElementById('dim-results').innerHTML = html;
+        document.querySelector('.report-area').scrollIntoView({ behavior: 'smooth' });
+    }
+</script>
+</body>
+</html>
